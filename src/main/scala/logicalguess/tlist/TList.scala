@@ -42,36 +42,4 @@ object TList {
   def empty = TList[Nothing](Nil)
 }
 
-class A
-case class B(name: String) extends A
-
-object TListTest {
-  def main(args: Array[String]): Unit = {
-    val t: TList[Nothing | Int | String | String | Int] =
-      TList.empty.add(1).add("a").add("b").add(2)
-
-    println(t.contains(7))
-    // false
-
-    println(t.getType)
-    // Nothing | Int | java.lang.String | java.lang.String | Int
-
-    println(t)
-    // Typed(List(1, a, b, 2))
-
-    println(t.filter[String])
-    // List(a, b)
-
-    println(t.filter[Double])
-    // List()
-
-    val t1 = t.add[B](new B("value"))
-    println(t1)
-    // Typed(List(1, a, b, 2, B(value)))
-
-    println(t1.filter[A])
-    // List(B(value))
-
-  }
-}
 

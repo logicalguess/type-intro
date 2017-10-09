@@ -15,17 +15,6 @@ object Implicits {
     implicitly[isAllowed[Int]]
 
     //implicitly[Nothing => String]
-
-    type Non[A] = A => Nothing
-    //implicitly[Non[String]]
-    //implicitly[Non[Non[String]]]
-
-    type Zero[A] = Unit => A
-    implicit def zero[String]: Zero[String] = (_ => "".asInstanceOf[String])
-    implicitly[Zero[String]]
-
-    type Dual[A, B] = A => B
-
   }
 
 }
