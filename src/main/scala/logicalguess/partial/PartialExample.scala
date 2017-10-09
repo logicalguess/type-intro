@@ -41,7 +41,7 @@ object PartialExample {
     //println(pf(Bool(true))) // runtime error: MatchError
 
     //type Input = InputA | InputB
-    //val call = Call[Input](pf)
+    //val call = Partial[Input](pf)
     val call = Partial.empty.union(pfa).union(pfb)
 
     println("evidence call IntA: " + call(IntA(55)))
@@ -50,9 +50,6 @@ object PartialExample {
     println("evidence call IntB: " + call(IntB(77)))
 
     //call(Bool(true)) //compile error
-
-    //type Inputs = |[|[InputA, InputB], Bool]
-    //println(Call[Input | Bool](downcast(pfa).orElse(downcast(pfb)).orElse(downcast(pfc)))(Bool(false)))
 
     val chain: Partial[|[|[|[Nothing, InputA], InputB], Bool]] = Partial.union(pfa).union(pfb).union(pfc)
     println(chain(Bool(false)))
@@ -76,7 +73,7 @@ object PartialExample {
     println(logic(IntA(99)))
     println(logic(StringB("xyz")))
 
-    // unionCall("abc") // compile error
+    // logic("abc") // compile error
 
   }
 
