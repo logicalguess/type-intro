@@ -1,10 +1,10 @@
-package logicalguess.partial
+package logicalguess.logic
 
-import logicalguess.partial.Partial.downcast
+import logicalguess.logic.Logic.downcast
 import logicalguess.union.|
 import org.scalatest.{FlatSpec, Matchers}
 
-object PartialSpec {
+object LogicSpec {
 
   sealed trait InputA
 
@@ -35,9 +35,9 @@ object PartialSpec {
   }
 }
 
-class PartialSpec extends FlatSpec with Matchers {
+class LogicSpec extends FlatSpec with Matchers {
 
-  import PartialSpec._
+  import LogicSpec._
 
   "downcast" should "" in {
     val pf = downcast(pfa).orElse(downcast(pfb))
@@ -50,7 +50,7 @@ class PartialSpec extends FlatSpec with Matchers {
     a[MatchError] should be thrownBy pf(Bool(true))
   }
 
-  val combine2: Partial[Nothing | InputA | InputB] = Partial.union(pfa).union(pfb)
+  val combine2: Logic[Nothing | InputA | InputB] = Logic.union(pfa).union(pfb)
 
   "union" should "allow combining two partial functions" in {
 
@@ -62,7 +62,7 @@ class PartialSpec extends FlatSpec with Matchers {
     "combine2(Bool(true))" shouldNot compile
   }
 
-  val combine3: Partial[|[|[|[Nothing, InputA], InputB], Bool]] = combine2.union(pfc)
+  val combine3: Logic[|[|[|[Nothing, InputA], InputB], Bool]] = combine2.union(pfc)
 
   "union" should "allow combining three partial functions" in {
 
@@ -78,40 +78,40 @@ class PartialSpec extends FlatSpec with Matchers {
   }
 
 
-  val partialAB: Partial[InputA | InputB] = Partial.from(pfa, pfb)
+  val logicAB: Logic[InputA | InputB] = Logic.from(pfa, pfb)
 
-  "from" should "allow building a partial from two partial functions" in {
+  "from" should "allow building some logic from two partial functions" in {
 
-    partialAB(IntA(55)) should equal(55)
-    partialAB(BoolA(true)) should equal(true)
-    partialAB(StringB("abc")) should equal("abc")
-    partialAB(IntB(77)) should equal(77)
+    logicAB(IntA(55)) should equal(55)
+    logicAB(BoolA(true)) should equal(true)
+    logicAB(StringB("abc")) should equal("abc")
+    logicAB(IntB(77)) should equal(77)
 
-    "partialAB(Bool(true))" shouldNot compile
+    "logicAB(Bool(true))" shouldNot compile
 
   }
 
-  val partialA = Partial.from(pfa)
-  val partialB = Partial.from(pfb)
-  val partialC = Partial.from(pfc)
+  val logicA = Logic(pfa)
+  val logicB = Logic(pfb)
+  val logicC = Logic(pfc)
 
-  val partial = partialA merge (partialB merge partialC) // right associative
+  val logic: Logic[|[InputA, |[InputB, Bool]]] = logicA merge (logicB merge logicC)
 
-  "merge" should "allow combining partials" in {
+  "merge" should "allow combining logic" in {
 
-    partial(IntA(55)) should equal(55)
-    partial(BoolA(true)) should equal(true)
-    partial(StringB("abc")) should equal("abc")
-    partial(IntB(77)) should equal(77)
+    logic(IntA(55)) should equal(55)
+    logic(BoolA(true)) should equal(true)
+    logic(StringB("abc")) should equal("abc")
+    logic(IntB(77)) should equal(77)
 
-    partial(Bool(true)) should equal(true)
+    logic(Bool(true)) should equal(true)
 
     "logic(5)" shouldNot compile
     "logic(\"abc\")" shouldNot compile
   }
 
-  val logic: Partial[|[|[|[Nothing, InputA], InputB], Bool]] =
-    Partial
+  val inline: Logic[|[|[|[Nothing, InputA], InputB], Bool]] =
+    Logic
       .union[InputA] {
         case IntA(i) => i
         case BoolA(b) => b
@@ -126,15 +126,15 @@ class PartialSpec extends FlatSpec with Matchers {
 
   "union" should "allow chaining partial functions" in {
 
-    logic(IntA(55)) should equal(55)
-    logic(BoolA(true)) should equal(true)
-    logic(StringB("abc")) should equal("abc")
-    logic(IntB(77)) should equal(77)
+    inline(IntA(55)) should equal(55)
+    inline(BoolA(true)) should equal(true)
+    inline(StringB("abc")) should equal("abc")
+    inline(IntB(77)) should equal(77)
 
-    logic(Bool(true)) should equal(true)
+    inline(Bool(true)) should equal(true)
 
-    "logic(5)" shouldNot compile
-    "logic(\"abc\")" shouldNot compile
+    "inline(5)" shouldNot compile
+    "inline(\"abc\")" shouldNot compile
   }
 
 }
