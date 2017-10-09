@@ -66,10 +66,10 @@ class PartialSpec extends FlatSpec with Matchers {
 
   "union" should "allow combining three partial functions" in {
 
-    combine2(IntA(55)) should equal(55)
-    combine2(BoolA(true)) should equal(true)
-    combine2(StringB("abc")) should equal("abc")
-    combine2(IntB(77)) should equal(77)
+    combine3(IntA(55)) should equal(55)
+    combine3(BoolA(true)) should equal(true)
+    combine3(StringB("abc")) should equal("abc")
+    combine3(IntB(77)) should equal(77)
 
     combine3(Bool(true)) should equal(true)
 
@@ -113,16 +113,16 @@ class PartialSpec extends FlatSpec with Matchers {
   val logic: Partial[|[|[|[Nothing, InputA], InputB], Bool]] =
     Partial
       .union[InputA] {
-      case IntA(i) => i
-      case BoolA(b) => b
-    }
+        case IntA(i) => i
+        case BoolA(b) => b
+      }
       .union[InputB] {
-      case StringB(s) => s
-      case IntB(i) => i
-    }
+        case StringB(s) => s
+        case IntB(i) => i
+      }
       .union[Bool] {
-      case Bool(b) => b
-    }
+        case Bool(b) => b
+      }
 
   "union" should "allow chaining partial functions" in {
 

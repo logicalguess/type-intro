@@ -39,7 +39,6 @@ object Partial {
 
 object emptyFunction extends PartialFunction[Any, Any] {
   def isDefinedAt(x: Any) = false
-
   def apply(x: Any) = throw new UnsupportedOperationException("Empty function")
 }
 
