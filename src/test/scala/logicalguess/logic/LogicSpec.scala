@@ -98,6 +98,9 @@ class LogicSpec extends FlatSpec with Matchers {
   val logic: Logic[|[InputA, |[InputB, Bool]]] = logicA merge (logicB merge logicC)
 
   "merge" should "allow combining logic" in {
+    logicA(IntA(55)) should equal(55)
+    "logicB(IntA(55))" shouldNot compile
+
 
     logic(IntA(55)) should equal(55)
     logic(BoolA(true)) should equal(true)

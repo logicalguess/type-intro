@@ -4,13 +4,13 @@ import logicalguess.union.{Union, isPartOf, |}
 
 import scala.reflect.ClassTag
 
-class LogicUnit[-U](val pf: PartialFunction[Any, Any]) {
-  def union[In](f: PartialFunction[In, Any])(implicit ct: ClassTag[In]): Logic[U | In] =
-    Logic[U | In](pf.orElse(Logic.downcast(f)))
+class LogicUnit[-I] private[logic] (val pf: PartialFunction[Any, Any]) {
+  def union[In](f: PartialFunction[In, Any])(implicit ct: ClassTag[In]): Logic[I | In] =
+    Logic[I | In](pf.orElse(Logic.downcast(f)))
 
-  def merge[V](p: LogicUnit[V]): Logic[U | V] = union(p.pf)
+  def merge[V](p: LogicUnit[V]): Logic[I | V] = union(p.pf)
 
-  def apply[In](in: In): Any = pf(in)
+  def apply(in: I): Any = pf(in)
 }
 
 case class Logic[-U <: Union](override val pf: PartialFunction[Any, Any]) extends LogicUnit[U](pf) {
