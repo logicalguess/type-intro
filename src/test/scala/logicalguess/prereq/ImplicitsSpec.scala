@@ -6,7 +6,7 @@ sealed trait isAllowed[+A] //covariant means evidence for Nothing is enough
 
 class ImplicitsSpec extends FlatSpec with Matchers {
   "isAllowed" should "compile only for provided implicits" in {
-    implicit def checkString[A]:isAllowed[String] = null
+    implicit def checkString[A]: isAllowed[String] = null
 
     implicitly[isAllowed[String]]
 
@@ -14,7 +14,7 @@ class ImplicitsSpec extends FlatSpec with Matchers {
     "implicitly[isAllowed[Int]]" shouldNot compile
   }
 
-  "isAllowed" should "scompile only for all provided implicits" in {
+  "isAllowed" should "compile only for all provided implicits" in {
     implicit def checkString[A]: isAllowed[String] = null
     implicit def checkInt[A]: isAllowed[Int] = null
 
@@ -37,5 +37,16 @@ class ImplicitsSpec extends FlatSpec with Matchers {
     "implicitly[isAllowed[String]]" should compile
     "implicitly[isAllowed[Int]]" should compile
     "implicitly[isAllowed[Double]]" should compile
+  }
+
+  "isAllowed" should "not compile for types with ambiguous evidence provided" in {
+    implicit def ambiguous1[A]: isAllowed[Nothing] = null
+    implicit def ambiguous2[A]: isAllowed[Nothing] = new isAllowed[Nothing] {}
+
+    "implicitly[isAllowed[String]]" shouldNot compile
+    "implicitly[isAllowed[Int]]" shouldNot compile
+    "implicitly[isAllowed[Nothing]]" shouldNot compile
+    "implicitly[isAllowed[Any]]" shouldNot compile
+
   }
 }
